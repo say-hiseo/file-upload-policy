@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: fup-postgres
+    restart: unless-stopped          # 추가
     environment:
       POSTGRES_DB: fileuploadpolicy
       POSTGRES_USER: app_user
@@ -21,6 +22,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: fup-backend
+    restart: unless-stopped          # 추가
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,6 +43,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: fup-frontend
+    restart: unless-stopped          # 추가
     depends_on:
       - backend
     ports:
