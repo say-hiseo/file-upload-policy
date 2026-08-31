@@ -1,0 +1,7 @@
+{
+  "name": "파일 업로드 정책 관리",
+  "description": "보안 담당자를 위한 파일 확장자 차단 정책 관리 및 업로드 즉시 검증 도구",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

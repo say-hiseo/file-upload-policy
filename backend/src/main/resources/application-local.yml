@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fileuploadpolicy
+    username: app_user
+    password: app_password
+
+  jpa:
+    show-sql: true
+
+app:
+  upload:
+    storage-path: ./uploads-local
+
+logging:
+  level:
+    com.assignment.fileuploadpolicy: DEBUG
+    org.hibernate.SQL: DEBUG

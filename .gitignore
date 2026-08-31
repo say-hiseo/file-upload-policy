@@ -1,0 +1,25 @@
+# Gradle
+backend/.gradle/
+backend/build/
+!backend/gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 업로드된 실제 파일
+uploads/
+backend/uploads-local/
+
+# 환경변수 / 시크릿
+.env
+*.local.yml
+
+# OS
+.DS_Store
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/build/

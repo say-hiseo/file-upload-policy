@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: fileuploadpolicy
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:fileuploadpolicy}
+    username: ${DB_USERNAME:app_user}
+    password: ${DB_PASSWORD:app_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # 스키마는 Flyway가 관리 -> Hibernate는 검증만 수행
+      # (운영 환경에서 ddl-auto: update는 의도치 않은 스키마 변경을 유발할 수 있어 지양)
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  # 1-6(검증/보안). 파일당 최대 10MB, 요청당 최대 10개 -> 합산 상한을 넉넉히 설정
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 100MB
+
+server:
+  port: 8080
+
+# Swagger / OpenAPI (springdoc는 Boot의 관리 대상이 아닌 서드파티 프로퍼티 네임스페이스라 Boot 4 모듈화와 무관하게 동일)
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+# 업로드/정책 관련 커스텀 설정값 (코드에서 @ConfigurationProperties로 주입해 사용)
+app:
+  upload:
+    max-file-size-bytes: 10485760      # 10MB, DB CHECK 제약과 동일 값 유지
+    max-file-count-per-request: 10
+    storage-path: ${UPLOAD_STORAGE_PATH:/app/uploads}
+  policy:
+    custom-extension-max-length: 20
+    custom-extension-max-count: 200
+
+logging:
+  level:
+    com.assignment.fileuploadpolicy: INFO
