@@ -19,7 +19,7 @@ export interface AddCustomExtensionRequest {
 }
 
 export interface AuditLogItem {
-  changedAt: string; // ISO datetime
+  changedAt: string;
   changedByUsername: string;
   action: "BLOCK" | "UNBLOCK" | "ADD" | "REMOVE";
   extension: string;

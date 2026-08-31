@@ -14,7 +14,7 @@ export interface UploadHistoryItemResponse {
   status: "SUCCESS" | "REJECTED";
   rejectReason: string | null;
   sizeBytes: number;
-  createdAt: string; // ISO datetime
+  createdAt: string;
   downloadable: boolean;
 }
 
@@ -35,13 +35,11 @@ export interface ClientFileItem {
   isMockFile?: boolean;
 }
 
-// A POST /api/uploads response, kept client-side so "what did I just upload"
-// (including the rejection reason) is visible without a login-gated history call.
 export interface UploadResultItem {
   id: string;
   filename: string;
   size: number;
   status: "SUCCESS" | "REJECTED";
   reason: string | null;
-  uploadedAt: string; // client-side ISO timestamp
+  uploadedAt: string;
 }

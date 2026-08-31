@@ -39,7 +39,6 @@ export const UploadPage: React.FC<UploadPageProps> = ({ uploadState, uploadHisto
 
   return (
     <div id="upload-page" className="flex flex-col gap-6 w-full max-w-5xl mx-auto">
-      {/* Drag & Drop File Selector */}
       <FileDropzone
         onFilesSelected={addFiles}
         onAddTestPresets={addTestPresets}
@@ -47,7 +46,6 @@ export const UploadPage: React.FC<UploadPageProps> = ({ uploadState, uploadHisto
         fileCount={fileList.length}
       />
 
-      {/* Selected Files & Result List */}
       <FileResultList
         files={fileList}
         isUploading={isUploading}
@@ -57,10 +55,8 @@ export const UploadPage: React.FC<UploadPageProps> = ({ uploadState, uploadHisto
         onUpload={uploadSelectedFiles}
       />
 
-      {/* Local, login-free result of the upload(s) just made this session */}
       <UploadResultList results={uploadResults} onClear={clearUploadResults} />
 
-      {/* Server-side Upload History */}
       <UploadHistoryTable
         items={historyItems}
         isAuthenticated={isHistoryAuthenticated}

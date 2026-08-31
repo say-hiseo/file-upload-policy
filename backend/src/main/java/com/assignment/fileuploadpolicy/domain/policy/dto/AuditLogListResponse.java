@@ -1,6 +1,6 @@
 package com.assignment.fileuploadpolicy.domain.policy.dto;
 
-import com.assignment.fileuploadpolicy.domain.policy.ExtensionPolicyAuditLog;
+import com.assignment.fileuploadpolicy.domain.policy.entity.ExtensionPolicyAuditLog;
 import java.util.List;
 import org.springframework.data.domain.Page;
 

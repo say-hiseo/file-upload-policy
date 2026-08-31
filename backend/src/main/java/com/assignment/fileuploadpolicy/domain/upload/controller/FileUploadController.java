@@ -1,15 +1,19 @@
-package com.assignment.fileuploadpolicy.domain.upload;
+package com.assignment.fileuploadpolicy.domain.upload.controller;
 
+import com.assignment.fileuploadpolicy.domain.upload.dto.FileDownload;
 import com.assignment.fileuploadpolicy.domain.upload.dto.UploadHistoryResponse;
 import com.assignment.fileuploadpolicy.domain.upload.dto.UploadResponse;
+import com.assignment.fileuploadpolicy.domain.upload.service.FileUploadService;
 import com.assignment.fileuploadpolicy.global.auth.ActorContext;
 import com.assignment.fileuploadpolicy.global.auth.ActorContextResolver;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,8 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.net.URLEncoder;
-import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "File Upload", description = "실제 파일 업로드 및 정책 강제 적용 API")
@@ -64,19 +66,12 @@ public class FileUploadController {
                 .replace("+", "%20");
 
         return ResponseEntity.ok()
-                // 저장된 MIME을 신뢰하지 않고 강제로 octet-stream 처리 -> 브라우저가
-                // 렌더링하지 않고 무조건 다운로드만 하도록 강제 (1-8 SVG XSS 대응과 동일 원칙)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + safeFilename + "\"; filename*=UTF-8''" + encodedFilename)
                 .body(download.resource());
     }
 
-    /**
-     * Content-Disposition 헤더 인젝션 방지. 파일명에 개행/제어문자가 섞여 있으면
-     * 응답 헤더가 조작될 수 있어(HTTP Response Splitting), 헤더에 넣기 직전 제거한다.
-     * (CONSIDERATIONS.md 1-8 "로그 인젝션 방지"와 동일한 원칙을 HTTP 헤더에 적용)
-     */
     private String sanitizeForHeader(String filename) {
         return filename.replaceAll("[\\r\\n\"]", "");
     }

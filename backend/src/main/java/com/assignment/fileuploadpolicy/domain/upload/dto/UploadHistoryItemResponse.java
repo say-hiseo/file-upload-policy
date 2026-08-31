@@ -1,7 +1,7 @@
 package com.assignment.fileuploadpolicy.domain.upload.dto;
 
-import com.assignment.fileuploadpolicy.domain.upload.UploadStatus;
-import com.assignment.fileuploadpolicy.domain.upload.UploadedFile;
+import com.assignment.fileuploadpolicy.domain.upload.entity.UploadStatus;
+import com.assignment.fileuploadpolicy.domain.upload.entity.UploadedFile;
 import java.time.OffsetDateTime;
 
 public record UploadHistoryItemResponse(

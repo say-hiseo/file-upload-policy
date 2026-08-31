@@ -21,8 +21,6 @@ function formatTimestamp(iso: string): string {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-// The direct response to "what just happened to the file I uploaded" — kept in
-// local state so it's visible to guests too, without a login-gated history call.
 export const UploadResultList: React.FC<UploadResultListProps> = ({ results, onClear }) => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 

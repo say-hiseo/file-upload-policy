@@ -50,7 +50,6 @@ export async function apiRequest<T>(url: string, options?: RequestInit): Promise
       return undefined as T;
     }
 
-    // Some endpoints (e.g. logout, toggleFixed) respond 200 with no body.
     const text = await res.text();
     return text ? JSON.parse(text) : (undefined as T);
   } catch (err: unknown) {

@@ -1,5 +1,6 @@
-package com.assignment.fileuploadpolicy.domain.policy;
+package com.assignment.fileuploadpolicy.domain.policy.repository;
 
+import com.assignment.fileuploadpolicy.domain.policy.entity.ExtensionPolicyAuditLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

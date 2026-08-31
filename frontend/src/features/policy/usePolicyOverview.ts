@@ -10,8 +10,6 @@ import { useToast } from '../../components/Toast';
 const DEFAULT_FIXED_EXTENSIONS = ['bat', 'cmd', 'com', 'cpl', 'exe', 'scr', 'js'];
 const AUDIT_LOG_PAGE_SIZE = 5;
 
-// `authKey` (e.g. isAuthenticated) triggers a refetch when login state changes,
-// so policy/audit-log data never goes stale across a login or logout.
 export function usePolicyOverview(authKey?: unknown) {
   const [policies, setPolicies] = useState<PolicyOverviewResponse>({
     fixed: DEFAULT_FIXED_EXTENSIONS.map((ext) => ({ extension: ext, blocked: false })),
@@ -49,9 +47,7 @@ export function usePolicyOverview(authKey?: unknown) {
         customCount: data.customCount ?? (data.custom?.length || 0),
         customMax: data.customMax || 200,
       });
-    } catch {
-      // Keep defaults; UI still renders with the 7 known fixed extensions
-    } finally {
+    } catch {} finally {
       setIsLoading(false);
     }
   }, []);
@@ -63,9 +59,7 @@ export function usePolicyOverview(authKey?: unknown) {
       setAuditLogsPage(0);
       setAuditLogsHasMore(data.hasMore);
       setAuditLogsTotalCount(data.totalCount);
-    } catch {
-      // Silent catch or empty logs
-    }
+    } catch {}
   }, []);
 
   const loadMoreAuditLogs = useCallback(async () => {
@@ -77,9 +71,7 @@ export function usePolicyOverview(authKey?: unknown) {
       setAuditLogs((prev) => [...prev, ...(data.items || [])]);
       setAuditLogsPage(nextPage);
       setAuditLogsHasMore(data.hasMore);
-    } catch {
-      // Silent catch
-    } finally {
+    } catch {} finally {
       setIsLoadingMoreAuditLogs(false);
     }
   }, [auditLogsPage, auditLogsHasMore, isLoadingMoreAuditLogs]);

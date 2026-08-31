@@ -17,8 +17,6 @@ export default defineConfig(() => {
       hmr: process.env.DISABLE_HMR !== 'true',
       // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
-      // Forward /api requests to the real backend so the browser only ever talks to
-      // this dev server's origin (matches the same-origin setup used in production).
       proxy: {
         '/api': {
           target: process.env.BACKEND_URL || 'http://localhost:8080',

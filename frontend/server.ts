@@ -6,14 +6,6 @@ import { createServer as createViteServer } from 'vite';
 const app = express();
 const PORT = 3000;
 
-// No body-parsing middleware here: /api/* requests are forwarded untouched to the
-// real backend via vite.config.ts's dev proxy, and parsing the body here would
-// consume the request stream before the proxy can forward it.
-
-// ----------------------------------------------------
-// Vite Dev Server / Static Asset Handler
-// ----------------------------------------------------
-
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({

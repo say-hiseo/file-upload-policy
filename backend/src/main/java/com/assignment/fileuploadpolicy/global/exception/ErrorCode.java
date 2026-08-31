@@ -3,19 +3,6 @@ package com.assignment.fileuploadpolicy.global.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * 전 도메인 공통 에러코드.
- * 요구사항 "차단 대상 파일 업로드 시 명확한 사유와 함께 거부"(B)와
- * "정책 위반 시 구체적 사유 전달"(A)를 이 enum 하나로 일관되게 처리한다.
- *
- * 코드 체계: {도메인 접두사}-{일련번호}
- *   POLICY-xxx : 확장자 정책 관리 (A)
- *   UPLOAD-xxx : 파일 업로드 검증 (B) - 다음 단계에서 채워나갈 예정
- *   COMMON-xxx : 도메인 공통
- *
- * message는 String.format 템플릿이다. 동적 값(확장자명, 개수 등)은
- * BusinessException 생성 시 args로 전달해 조립한다.
- */
 @Getter
 public enum ErrorCode {
 
@@ -48,18 +35,19 @@ public enum ErrorCode {
             "'%s' 확장자는 차단된 확장자입니다"),
     DANGEROUS_FILE_SIGNATURE(HttpStatus.BAD_REQUEST, "UPLOAD-005",
             "파일 내용이 실행 파일 시그니처와 일치하여 업로드가 거부되었습니다"),
-
-    // ===== Auth 도메인 =====
-    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH-001",
-            "아이디 또는 비밀번호가 올바르지 않습니다"),
-
-    // ===== Upload 도메인 (B) - 추가 =====
     UPLOAD_LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "UPLOAD-006",
             "로그인이 필요한 기능입니다"),
     UPLOAD_FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "UPLOAD-007",
             "다운로드할 수 없는 파일입니다"),
     UPLOAD_FILE_FORBIDDEN(HttpStatus.FORBIDDEN, "UPLOAD-008",
             "본인이 업로드한 파일만 다운로드할 수 있습니다"),
+    FILE_SIZE_EXCEEDED(HttpStatus.PAYLOAD_TOO_LARGE, "UPLOAD-009",
+            "파일 크기가 허용된 최대 크기를 초과했습니다"),
+
+
+    // ===== Auth 도메인 =====
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "AUTH-001",
+            "아이디 또는 비밀번호가 올바르지 않습니다"),
 
     // ===== 공통 =====
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "COMMON-001", "잘못된 요청입니다: %s"),

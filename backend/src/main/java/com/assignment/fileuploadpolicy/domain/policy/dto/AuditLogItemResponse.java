@@ -1,8 +1,8 @@
 package com.assignment.fileuploadpolicy.domain.policy.dto;
 
-import com.assignment.fileuploadpolicy.domain.policy.AuditAction;
-import com.assignment.fileuploadpolicy.domain.policy.ExtensionPolicyAuditLog;
-import com.assignment.fileuploadpolicy.domain.policy.PolicyType;
+import com.assignment.fileuploadpolicy.domain.policy.entity.AuditAction;
+import com.assignment.fileuploadpolicy.domain.policy.entity.ExtensionPolicyAuditLog;
+import com.assignment.fileuploadpolicy.domain.policy.entity.PolicyType;
 import java.time.OffsetDateTime;
 
 public record AuditLogItemResponse(

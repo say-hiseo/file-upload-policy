@@ -5,8 +5,6 @@ import { useToast } from '../../components/Toast';
 
 const HISTORY_PAGE_SIZE = 10;
 
-// GET /api/uploads/history requires a logged-in session (401 UPLOAD-006 otherwise),
-// unlike POST /api/uploads which guests can also use.
 export function useUploadHistory(isAuthenticated: boolean) {
   const [items, setItems] = useState<UploadHistoryItemResponse[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -26,9 +24,7 @@ export function useUploadHistory(isAuthenticated: boolean) {
       setPage(0);
       setHasMore(data.hasMore);
       setTotalCount(data.totalCount);
-    } catch {
-      // Silent catch or empty history
-    } finally {
+    } catch {} finally {
       setIsLoading(false);
     }
   }, [isAuthenticated]);
@@ -53,9 +49,7 @@ export function useUploadHistory(isAuthenticated: boolean) {
       setItems((prev) => [...prev, ...(data.items || [])]);
       setPage(nextPage);
       setHasMore(data.hasMore);
-    } catch {
-      // Silent catch
-    } finally {
+    } catch {} finally {
       setIsLoadingMore(false);
     }
   }, [page, hasMore, isLoadingMore]);

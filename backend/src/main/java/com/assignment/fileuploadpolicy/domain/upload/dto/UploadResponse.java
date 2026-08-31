@@ -1,6 +1,6 @@
 package com.assignment.fileuploadpolicy.domain.upload.dto;
 
-import com.assignment.fileuploadpolicy.domain.upload.UploadedFile;
+import com.assignment.fileuploadpolicy.domain.upload.entity.UploadedFile;
 import java.util.List;
 
 public record UploadResponse(List<UploadResultResponse> results) {

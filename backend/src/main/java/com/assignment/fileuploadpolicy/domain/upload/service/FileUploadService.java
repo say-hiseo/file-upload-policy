@@ -1,13 +1,18 @@
-package com.assignment.fileuploadpolicy.domain.upload;
+package com.assignment.fileuploadpolicy.domain.upload.service;
 
-import com.assignment.fileuploadpolicy.domain.policy.ExtensionNormalizer;
-import com.assignment.fileuploadpolicy.domain.policy.ExtensionPolicy;
-import com.assignment.fileuploadpolicy.domain.policy.ExtensionPolicyRepository;
+import com.assignment.fileuploadpolicy.domain.policy.entity.ExtensionPolicy;
+import com.assignment.fileuploadpolicy.domain.policy.repository.ExtensionPolicyRepository;
+import com.assignment.fileuploadpolicy.domain.policy.service.ExtensionNormalizer;
+import com.assignment.fileuploadpolicy.domain.upload.dto.FileDownload;
+import com.assignment.fileuploadpolicy.domain.upload.entity.UploadStatus;
+import com.assignment.fileuploadpolicy.domain.upload.entity.UploadedFile;
+import com.assignment.fileuploadpolicy.domain.upload.repository.UploadedFileRepository;
 import com.assignment.fileuploadpolicy.global.auth.ActorContext;
 import com.assignment.fileuploadpolicy.global.config.UploadProperties;
 import com.assignment.fileuploadpolicy.global.exception.BusinessException;
 import com.assignment.fileuploadpolicy.global.exception.ErrorCode;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -18,25 +23,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import java.net.MalformedURLException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-/**
- * B. 실제 파일 업로드 처리.
- * A(정책 화면)와 동일한 조회 지점(ExtensionPolicyRepository.findByBlockedTrue)을 사용해,
- * 정책이 실제 업로드에도 일관되게 강제되도록 한다. (요구사항 문서 "A와 B가 같은 쿼리를
- * 공유해야 하는 이유" 참고)
- *
- * 요청 레벨 검증(개수 초과 등)은 예외를 던져 요청 전체를 거부하고,
- * 파일별 검증(확장자 차단, 매직바이트 등)은 예외 없이 결과값으로 모아
- * "부분 성공" 응답을 만든다. (CONSIDERATIONS.md 1-6 참고)
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -70,7 +64,7 @@ public class FileUploadService {
 
     private UploadedFile processSingleFile(MultipartFile file, Set<String> blockedExtensions, ActorContext actor) {
         String originalFilename = Optional.ofNullable(file.getOriginalFilename()).orElse("(알 수 없음)");
-        String detectedMime = file.getContentType(); // 신뢰하지 않음, 기록용 (CONSIDERATIONS.md 1-8)
+        String detectedMime = file.getContentType();
         String representativeExtension = resolveRepresentativeExtension(originalFilename);
 
         String rejectReason = validate(file, originalFilename, blockedExtensions);
@@ -95,10 +89,6 @@ public class FileUploadService {
                 file.getSize(), actor.memberId(), actor.username()));
     }
 
-    /**
-     * 디스크에 쓰기 전에 완료되는 사전 검증. 실패 사유를 반환하고,
-     * 통과하면 null을 반환한다 (1-8 "임시 파일 잔여 방지" 원칙).
-     */
     private String validate(MultipartFile file, String originalFilename, Set<String> blockedExtensions) {
         if (file.isEmpty()) {
             return ErrorCode.EMPTY_FILE.formatMessage();
@@ -113,16 +103,10 @@ public class FileUploadService {
             if (normalized.isPresent() && blockedExtensions.contains(normalized.get())) {
                 return ErrorCode.FILE_EXTENSION_BLOCKED.formatMessage(normalized.get());
             }
-            // 정규화 실패 조각은 화이트리스트를 벗어난 형식이라 "알려진 차단 확장자"와
-            // 애초에 일치할 수 없다 - 이 조각만 건너뛰고 파일 전체를 거부하진 않는다.
         }
         return null;
     }
 
-    /**
-     * 화면/기록에 표시할 대표 확장자 (마지막 조각). 실제 차단 판단은 validate()가
-     * 모든 조각을 대상으로 이미 수행했으므로, 여기서는 표시값 하나만 정한다.
-     */
     private String resolveRepresentativeExtension(String originalFilename) {
         List<String> fragments = FileNameParser.extractExtensionFragments(originalFilename);
         if (fragments.isEmpty()) {
@@ -147,11 +131,6 @@ public class FileUploadService {
         }
     }
 
-    /**
-     * 로그인 사용자 본인의 업로드 이력 조회. (신규 요구사항)
-     * 비로그인 상태는 명시적으로 거부한다 - 남의 이력이 SYSTEM 계정으로
-     * 뒤섞여 노출되는 걸 방지하기 위해, "본인 확인이 되는 경우에만" 응답한다.
-     */
     @Transactional(readOnly = true)
     public Page<UploadedFile> getHistory(ActorContext actor, Pageable pageable) {
         requireLogin(actor);
@@ -159,10 +138,6 @@ public class FileUploadService {
                 actor.memberId(), pageable);
     }
 
-    /**
-     * 파일 다운로드. 소유권 검증(본인 파일만) 후 리소스를 반환한다.
-     * (CONSIDERATIONS.md 1-7에서 계획했던 "인증 기반 다운로드 API"의 실제 구현체)
-     */
     @Transactional(readOnly = true)
     public FileDownload loadForDownload(Long uploadedFileId, ActorContext actor) {
         requireLogin(actor);

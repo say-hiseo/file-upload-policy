@@ -146,9 +146,6 @@ export function useFileUpload(onUploadComplete?: () => void) {
   const uploadSelectedFiles = async () => {
     if (isUploading) return;
 
-    // Only PENDING items go out — files already uploaded (SUCCESS/REJECTED by the
-    // server) are removed from the list right after their round-trip, so re-clicking
-    // "업로드" can never re-send them.
     const pendingItems = fileList.filter((item) => item.status === 'PENDING');
     if (pendingItems.length === 0) return;
 
@@ -181,9 +178,6 @@ export function useFileUpload(onUploadComplete?: () => void) {
 
       const response = await uploadApi.uploadFiles(filesToUpload);
 
-      // Keep the server's verdict (incl. rejection reason) client-side so it stays
-      // visible without a login-gated history call — results line up with
-      // pendingItems by index since that's the order they were sent in.
       const newResults: UploadResultItem[] = pendingItems.map((item, index) => {
         const res = response.results[index];
         return {
@@ -195,12 +189,8 @@ export function useFileUpload(onUploadComplete?: () => void) {
           uploadedAt: new Date().toISOString(),
         };
       });
-      // Replace rather than accumulate — each new upload batch is its own answer
-      // to "what just happened," not a running log (that's what 업로드 이력 is for).
       setUploadResults(newResults);
 
-      // The server has now recorded these in the upload history — drop them from
-      // the selection list so they only show there, and so they can't be re-uploaded.
       setFileList((prev) => prev.filter((item) => !uploadingIds.has(item.id)));
 
       const successCount = response.results.filter((r) => r.status === 'SUCCESS').length;
@@ -219,8 +209,6 @@ export function useFileUpload(onUploadComplete?: () => void) {
 
       onUploadComplete?.();
     } catch (err: unknown) {
-      // Nothing reached the server, so keep these items (as REJECTED) for a retry
-      // instead of dropping them like a real server verdict would.
       setFileList((prev) =>
         prev.map((item) =>
           uploadingIds.has(item.id)

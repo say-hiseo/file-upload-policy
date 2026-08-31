@@ -3,6 +3,8 @@ package com.assignment.fileuploadpolicy.domain.policy;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
+
+import com.assignment.fileuploadpolicy.domain.policy.service.ExtensionNormalizer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

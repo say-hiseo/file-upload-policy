@@ -1,4 +1,4 @@
-package com.assignment.fileuploadpolicy.domain.upload;
+package com.assignment.fileuploadpolicy.domain.upload.dto;
 
 import org.springframework.core.io.Resource;
 
