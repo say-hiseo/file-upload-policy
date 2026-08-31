@@ -31,10 +31,9 @@
 | **배포된 사이트** | http://101.79.28.162/ |
 | **API 문서 (Swagger)** | http://101.79.28.162/swagger-ui/index.html |
 | **GitHub 저장소** | https://github.com/say-hiseo/file-upload-policy |
-| 요구사항 정의서 | [`REQUIREMENTS.md`](./REQUIREMENTS.md) |
-| 기획/보안/예외/운영 고려사항 | [`CONSIDERATIONS.md`](./CONSIDERATIONS.md) |
-| DB 스키마 상세 설계 (ERD 포함) | [`SCHEMA_DESIGN.md`](./SCHEMA_DESIGN.md) |
-| AI 활용 기록 | [`PROMPT_LOG.md`](./PROMPT_LOG.md) |
+| 요구사항 정의서 | [`REQUIREMENTS.md`](./docs/REQUIREMENTS.md) |
+| 기획/보안/예외/운영 고려사항 | [`CONSIDERATIONS.md`](./docs/CONSIDERATIONS.md) |
+| AI 활용 기록 | [`PROMPT_LOG.md`](./docs/PROMPT_LOG.md) |
 
 ### 데모 계정 (더미 로그인)
 
@@ -287,9 +286,6 @@ cd backend
 
 ## 🗄 데이터베이스 스키마
 
-전체 DDL과 설계 과정(왜 이런 구조를 택했는지)은 `SCHEMA_DESIGN.md`를
-참고해 주세요. 아래는 테이블 요약입니다.
-
 | 테이블 | 설명 |
 | --- | --- |
 | `member` | 더미 로그인용 사용자 |
@@ -308,8 +304,7 @@ cd backend
 "불변 로그인지"를 기준으로 테이블마다 다르게 적용 (상세 근거는
 `SCHEMA_DESIGN.md` 참고)
 
-*(ERD는 `SCHEMA_DESIGN.md`에 Mermaid 다이어그램으로도 포함되어 있어 GitHub에서
-바로 렌더링됩니다. 실제 캡처본은 위 "프로젝트 산출물" 섹션의 `07-erd.png`를 참고해 주세요.)*
+*(ERD는 위 "프로젝트 산출물" 섹션의 `07-erd.png`를 참고해 주세요.)*
 
 ---
 
@@ -336,7 +331,6 @@ cd backend
 
 | 문서 | 내용 |
 |---|---|
-| [`REQUIREMENTS.md`](./REQUIREMENTS.md) | 요구사항 정의서 (동작/제약 중심) |
-| [`CONSIDERATIONS.md`](./CONSIDERATIONS.md) | 기획/검증·보안/정책·데이터/UX·예외/운영 관점 판단과 근거 |
-| [`SCHEMA_DESIGN.md`](./SCHEMA_DESIGN.md) | 테이블 스키마 DDL, ERD 및 설계 과정 |
-| [`PROMPT_LOG.md`](./PROMPT_LOG.md) | AI 활용 프롬프트 기록, 스킬/도구 사용 내역, 판단 근거 회고 |
+| [`REQUIREMENTS.md`](./docs/REQUIREMENTS.md) | 요구사항 정의서 (동작/제약 중심) |
+| [`CONSIDERATIONS.md`](./docs/CONSIDERATIONS.md) | 기획/검증·보안/정책·데이터/UX·예외/운영 관점 판단과 근거 |
+| [`PROMPT_LOG.md`](./docs/PROMPT_LOG.md) | AI 활용 프롬프트 기록, 스킬/도구 사용 내역, 판단 근거 회고 |
