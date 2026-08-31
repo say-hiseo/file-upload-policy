@@ -1,7 +1,7 @@
 # 요구사항 정의서 — 파일 확장자 차단 정책 관리
 
 동작(behavior)과 제약조건(constraint)만 다룹니다. "왜 이런 정책이 필요한가"에
-대한 판단 근거는 [`CONSIDERATIONS.md`](./docs/CONSIDERATIONS.md)를 참고해 주세요.
+대한 판단 근거는 [`CONSIDERATIONS.md`](./CONSIDERATIONS.md)를 참고해 주세요.
 
 ---
 
